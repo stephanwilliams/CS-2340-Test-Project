@@ -20,6 +20,7 @@ public class CS2340ProjectTests extends AndroidTestCase {
 
 	private static final String TEST_USERNAME = "TEST_USER";
 	private static final String TEST_USERNAME2 = "TEST_USER2";
+	private static final String TEST_USERNAME2 = "TEST_USER3";
 	private static final String TEST_PASSWORD = "TEST_PASSWORD";
 	
 	private DatabaseHelper databaseHelper;
@@ -28,8 +29,10 @@ public class CS2340ProjectTests extends AndroidTestCase {
 	private IFinanceDataService financeDataService;
 	private IUser user;
 	private IUser user2;
+	private IUser user3;
 	private IAccount account;
 	private IAccount account2;
+	private IAccount account3;
 
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -45,6 +48,9 @@ public class CS2340ProjectTests extends AndroidTestCase {
 		user2 = userAccountService.createUser(TEST_USERNAME2, TEST_PASSWORD);
 		account2 = financeDataService.createAccount(user2, "test name", "test name", BigDecimal.ZERO, BigDecimal.ZERO);
 		
+		user3 = userAccountService.createUser(TEST_USERNAME3, TEST_PASSWORD);
+		account3 = financeDataService.createAccount(user3, "test name", "test name", BigDecimal.ZERO, BigDecimal.ZERO);
+		financeDataService.createTransaction(user3, 2, TransactionType.DEPOSIT, "test_category", BigDecimal.ZERO, "test_reason");
 	}
 	
 	public void testAuthenticateUser() throws UserAccountException{
@@ -114,11 +120,40 @@ public class CS2340ProjectTests extends AndroidTestCase {
 		}
 		fail("Should throw exception on attempted non-owned account access");
 	}
+	
+	public void testGetTransactionNoTransaction() {
+		try {
+			financeDataService.getTransaction(account3, null);
+		} catch (FinanceDataException fde) {
+			assertEquals("Transaction does not exist", fde.getMessage());
+			return;
+		}
+		fail("Should throw exception when transaction does not exist");
+	}
 
+	public void testGetTransactionNullAccount() {
+		try {
+			financeDataService.getTransaction(null, 1); 
+		} catch (FinanceDataException fde) {
+			assertEquals("Account must not be null", fde.getMessage());
+			return;
+		}
+		fail("Should throw exception when account is null");
+	}
+	
+	public void testGetTransactionNotBelongAccount() {
+		try {
+			financeDataService.getTransaction(account3, 1); 
+		} catch (FinanceDataException fde) {
+			assertEquals("Transaction does not belong to account", fde.getMessage());
+			return;
+		}
+		fail("Should throw exception that transaction does not belong to account");
+	}
+	
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		databaseHelper.onUpgrade(database, 0, 0);
-		
 	}
 
 }
