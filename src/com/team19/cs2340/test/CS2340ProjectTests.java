@@ -55,6 +55,7 @@ public class CS2340ProjectTests extends AndroidTestCase {
 		financeDataService.createTransaction(account3, 3, TransactionType.DEPOSIT, "test_category", BigDecimal.ZERO, "test_reason");
 	}
 	
+	// Michael Lu
 	public void testAuthenticateUser() throws UserAccountException{
 		userAccountService.authenticateUser(TEST_USERNAME, TEST_PASSWORD);
 	}
@@ -93,6 +94,7 @@ public class CS2340ProjectTests extends AndroidTestCase {
 	}
 	
 	
+	// Stephan Williams
 	public void testGetAccount() throws FinanceDataException {
 		financeDataService.getAccount(user, account.getAccountId());
 	}
@@ -126,6 +128,7 @@ public class CS2340ProjectTests extends AndroidTestCase {
 		fail("Should throw exception on attempted non-owned account access");
 	}
 	
+	// James Moak
 	public void testGetTransactionsLength() {
 		try {
 			assertEquals(2, financeDataService.getTransactions(account3).size());
