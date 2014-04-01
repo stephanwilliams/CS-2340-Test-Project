@@ -10,6 +10,7 @@ import com.team19.cs2340.finance.FinanceDataException;
 import com.team19.cs2340.finance.FinanceDataServiceFactory;
 import com.team19.cs2340.finance.IAccount;
 import com.team19.cs2340.finance.IFinanceDataService;
+import com.team19.cs2340.finance.ITransaction.TransactionType;
 import com.team19.cs2340.user.IUser;
 import com.team19.cs2340.user.IUserAccountService;
 import com.team19.cs2340.user.UserAccountServiceFactory;
@@ -20,7 +21,7 @@ public class CS2340ProjectTests extends AndroidTestCase {
 
 	private static final String TEST_USERNAME = "TEST_USER";
 	private static final String TEST_USERNAME2 = "TEST_USER2";
-	private static final String TEST_USERNAME2 = "TEST_USER3";
+	private static final String TEST_USERNAME3 = "TEST_USER3";
 	private static final String TEST_PASSWORD = "TEST_PASSWORD";
 	
 	private DatabaseHelper databaseHelper;
@@ -50,8 +51,8 @@ public class CS2340ProjectTests extends AndroidTestCase {
 		
 		user3 = userAccountService.createUser(TEST_USERNAME3, TEST_PASSWORD);
 		account3 = financeDataService.createAccount(user3, "test name", "test name", BigDecimal.ZERO, BigDecimal.ZERO);
-		financeDataService.createTransaction(user3, 2, TransactionType.DEPOSIT, "test_category", BigDecimal.ZERO, "test_reason");
-		financeDataService.createTransaction(user3, 3 TransactionType.DEPOSIT, "test_category", BigDecimal.ZERO, "test_reason");
+		financeDataService.createTransaction(account3, 2, TransactionType.DEPOSIT, "test_category", BigDecimal.ZERO, "test_reason");
+		financeDataService.createTransaction(account3, 3, TransactionType.DEPOSIT, "test_category", BigDecimal.ZERO, "test_reason");
 	}
 	
 	public void testAuthenticateUser() throws UserAccountException{
@@ -123,7 +124,12 @@ public class CS2340ProjectTests extends AndroidTestCase {
 	}
 	
 	public void testGetTransactionsLength() {
-		assertEquals(2, financeDataService.getTransactions(account3)).size();
+		try {
+			assertEquals(2, financeDataService.getTransactions(account3).size());
+		} catch (FinanceDataException fde) {
+			//assertEquals("Account is null", fde.getMessage());
+			return;
+		}
 		return;
 	}
 	
