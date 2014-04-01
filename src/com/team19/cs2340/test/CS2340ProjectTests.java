@@ -64,7 +64,8 @@ public class CS2340ProjectTests extends AndroidTestCase {
 		try{
 			userAccountService.authenticateUser(TEST_USERNAME, TEST_PASSWORD + "a");
 		} catch (UserAccountException uae){
-			assertEquals("Invalid Password", uae.getMessage());
+			assertEquals("Invalid password", uae.getMessage());
+			return;
 		}
 		fail("Should throw exception on invalid password");
 	}
@@ -75,6 +76,7 @@ public class CS2340ProjectTests extends AndroidTestCase {
 			userAccountService.authenticateUser(TEST_USERNAME, "");
 		} catch (UserAccountException uae){
 			assertEquals("No Password", uae.getMessage());
+			return;
 		}
 		fail("Should throw exception on null password");
 	}
@@ -85,6 +87,7 @@ public class CS2340ProjectTests extends AndroidTestCase {
 			userAccountService.authenticateUser("", TEST_PASSWORD);
 		} catch (UserAccountException uae){
 			assertEquals("No User", uae.getMessage());
+			return;
 		}
 		fail("Should throw exception on null user");
 	}
@@ -135,7 +138,7 @@ public class CS2340ProjectTests extends AndroidTestCase {
 	
 	public void testGetTransactionsInvalidAccount() {
 		try {
-			financeDataService.getTransactions(account3); 
+			financeDataService.getTransactions(null); 
 		} catch (FinanceDataException fde) {
 			assertEquals("Account is null", fde.getMessage());
 			return;
