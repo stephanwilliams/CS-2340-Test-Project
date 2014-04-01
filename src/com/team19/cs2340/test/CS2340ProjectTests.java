@@ -51,6 +51,7 @@ public class CS2340ProjectTests extends AndroidTestCase {
 		user3 = userAccountService.createUser(TEST_USERNAME3, TEST_PASSWORD);
 		account3 = financeDataService.createAccount(user3, "test name", "test name", BigDecimal.ZERO, BigDecimal.ZERO);
 		financeDataService.createTransaction(user3, 2, TransactionType.DEPOSIT, "test_category", BigDecimal.ZERO, "test_reason");
+		financeDataService.createTransaction(user3, 3 TransactionType.DEPOSIT, "test_category", BigDecimal.ZERO, "test_reason");
 	}
 	
 	public void testAuthenticateUser() throws UserAccountException{
@@ -121,34 +122,19 @@ public class CS2340ProjectTests extends AndroidTestCase {
 		fail("Should throw exception on attempted non-owned account access");
 	}
 	
-	public void testGetTransactionNoTransaction() {
-		try {
-			financeDataService.getTransaction(account3, null);
-		} catch (FinanceDataException fde) {
-			assertEquals("Transaction does not exist", fde.getMessage());
-			return;
-		}
-		fail("Should throw exception when transaction does not exist");
-	}
-
-	public void testGetTransactionNullAccount() {
-		try {
-			financeDataService.getTransaction(null, 1); 
-		} catch (FinanceDataException fde) {
-			assertEquals("Account must not be null", fde.getMessage());
-			return;
-		}
-		fail("Should throw exception when account is null");
+	public void testGetTransactionsLength() {
+		assertEquals(2, financeDataService.getTransactions(account3)).size();
+		return;
 	}
 	
-	public void testGetTransactionNotBelongAccount() {
+	public void testGetTransactionsInvalidAccount() {
 		try {
-			financeDataService.getTransaction(account3, 1); 
+			financeDataService.getTransactions(account3); 
 		} catch (FinanceDataException fde) {
-			assertEquals("Transaction does not belong to account", fde.getMessage());
+			assertEquals("Account is null", fde.getMessage());
 			return;
 		}
-		fail("Should throw exception that transaction does not belong to account");
+		fail("Should throw exception that account ");
 	}
 	
 	protected void tearDown() throws Exception {
