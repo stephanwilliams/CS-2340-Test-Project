@@ -13,6 +13,8 @@ import com.team19.cs2340.finance.IFinanceDataService;
 import com.team19.cs2340.user.IUser;
 import com.team19.cs2340.user.IUserAccountService;
 import com.team19.cs2340.user.UserAccountServiceFactory;
+import com.team19.cs2340.user.UserAccountException;
+
 
 public class CS2340ProjectTests extends AndroidTestCase {
 
@@ -45,10 +47,44 @@ public class CS2340ProjectTests extends AndroidTestCase {
 		
 	}
 	
+	public void testAuthenticateUser() throws UserAccountException{
+		userAccountService.authenticateUser(TEST_USERNAME, TEST_PASSWORD);
+	}
+	
+	//Random Password
+	public void testAuthenticateUserInvalidPassword(){
+		try{
+			userAccountService.authenticateUser(TEST_USERNAME, TEST_PASSWORD + "a");
+		} catch (UserAccountException uae){
+			assertEquals("Invalid Password", uae.getMessage());
+		}
+		fail("Should throw exception on invalid password");
+	}
+	
+	//Null Password
+	public void testAuthenticateUserNullPassword(){
+		try{
+			userAccountService.authenticateUser(TEST_USERNAME, "");
+		} catch (UserAccountException uae){
+			assertEquals("No Password", uae.getMessage());
+		}
+		fail("Should throw exception on null password");
+	}
+	
+	//Null User
+	public void testAuthenticateUserNullUser(){
+		try{
+			userAccountService.authenticateUser("", TEST_PASSWORD);
+		} catch (UserAccountException uae){
+			assertEquals("No User", uae.getMessage());
+		}
+		fail("Should throw exception on null user");
+	}
+	
+	
 	public void testGetAccount() throws FinanceDataException {
 		financeDataService.getAccount(user, account.getAccountId());
 	}
-	
 	public void testGetAccountNullUser() {
 		try {
 			financeDataService.getAccount(null, 0);
